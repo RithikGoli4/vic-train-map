@@ -19,6 +19,7 @@
       "projection": {"type": "mercator"},
       "layer": [
         {
+          // Base map of Victoria
           "data": {
             "url": "https://raw.githubusercontent.com/MatthewAJohnson/geojson-au-states/master/vic.geojson",
             "format": {"type": "geojson"}
@@ -26,16 +27,25 @@
           "mark": {"type": "geoshape", "fill": "#f0f0f0", "stroke": "black"}
         },
         {
+          // Train stations as circles
           "data": {"url": "data/train_entries.csv"},
-          "mark": "circle",
+          "mark": {"type": "circle", "opacity": 0.8, "stroke": "black"},
           "encoding": {
             "longitude": {"field": "Stop_long", "type": "quantitative"},
             "latitude": {"field": "Stop_lat", "type": "quantitative"},
-            "size": {"field": "Pax_annual", "type": "quantitative", "scale":{"range":[50,1000]}},
-            "color": {"field": "Pax_annual", "type": "quantitative", "scale": {"scheme": "blues"}},
+            "size": {
+              "field": "Pax_annual",
+              "type": "quantitative",
+              "scale": {"range": [50, 1000]}
+            },
+            "color": {
+              "field": "Pax_annual",
+              "type": "quantitative",
+              "scale": {"scheme": "blues"}
+            },
             "tooltip": [
-              {"field": "Stop_name", "type": "nominal"},
-              {"field": "Pax_annual", "type": "quantitative"}
+              {"field": "Stop_name", "type": "nominal", "title": "Station"},
+              {"field": "Pax_annual", "type": "quantitative", "title": "Annual Entries"}
             ]
           }
         }
