@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Victoria Train Station Entries</title>
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+</head>
+<body>
+  <h2>Annual Regional Train Station Entries in Victoria</h2>
+  <div id="vis"></div>
+
+  <script>
+    const spec = {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "width": 600,
+      "height": 600,
+      "projection": {"type": "mercator"},
+      "layer": [
+        {
+          // Base map of Victoria regions
+          "data": {
+            "url": "victoria_regions.json",
+            "format": {"type": "geojson"}
+          },
+          "mark": {"type": "geoshape", "stroke": "white", "strokeWidth": 1},
+          "encoding": {
+            "color": {
+              "field": "entries",
+              "type": "quantitative",
+              "scale": {"scheme": "blues"}
+            },
+            "tooltip": [
+              {"field": "region", "type": "nominal"},
+              {"field": "entries", "type": "quantitative"}
+            ]
+          },
+          "transform": [
+            {
+              "lookup": "properties.name",   // region names in GeoJSON
+              "from": {
+                "data": {"url": "train_entries.csv"},
+                "key": "region",
+                "fields": ["entries"]
+              }
+            }
+          ]
+        }
+      ]
+    };
+
+    vegaEmbed("#vis", spec);
+  </script>
+</body>
+</html>
