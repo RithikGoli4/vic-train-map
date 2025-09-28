@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8">
   <title>Victoria Train Station Entries</title>
   <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
 </head>
 <body>
-  <h2>Annual Regional Train Station Entries in Victoria</h2>
+  <h2>Annual Train Station Entries in Victoria (FY24-25)</h2>
   <div id="vis"></div>
 
   <script>
@@ -19,33 +19,25 @@
       "projection": {"type": "mercator"},
       "layer": [
         {
-          // Base map of Victoria regions
           "data": {
-            "url": "victoria_regions.json",
+            "url": "https://raw.githubusercontent.com/MatthewAJohnson/geojson-au-states/master/vic.geojson",
             "format": {"type": "geojson"}
           },
-          "mark": {"type": "geoshape", "stroke": "white", "strokeWidth": 1},
+          "mark": {"type": "geoshape", "fill": "#f0f0f0", "stroke": "black"}
+        },
+        {
+          "data": {"url": "data/train_entries.csv"},
+          "mark": "circle",
           "encoding": {
-            "color": {
-              "field": "entries",
-              "type": "quantitative",
-              "scale": {"scheme": "blues"}
-            },
+            "longitude": {"field": "Stop_long", "type": "quantitative"},
+            "latitude": {"field": "Stop_lat", "type": "quantitative"},
+            "size": {"field": "Pax_annual", "type": "quantitative", "scale":{"range":[50,1000]}},
+            "color": {"field": "Pax_annual", "type": "quantitative", "scale": {"scheme": "blues"}},
             "tooltip": [
-              {"field": "region", "type": "nominal"},
-              {"field": "entries", "type": "quantitative"}
+              {"field": "Stop_name", "type": "nominal"},
+              {"field": "Pax_annual", "type": "quantitative"}
             ]
-          },
-          "transform": [
-            {
-              "lookup": "properties.name",   // region names in GeoJSON
-              "from": {
-                "data": {"url": "train_entries.csv"},
-                "key": "region",
-                "fields": ["entries"]
-              }
-            }
-          ]
+          }
         }
       ]
     };
